@@ -15,7 +15,7 @@ jobs:
       if: (NOT (type IN (pull_request)))
       script:
         # Build Dev image
-        - docker build --no-cache ${DOCKERHUB}:${TRAVIS_COMMIT} .
+        - docker build --no-cache -t ${DOCKERHUB}:${TRAVIS_COMMIT} .
         - docker tag ${DOCKERHUB}:${TRAVIS_COMMIT} ${DOCKERHUB}:latest
         # Login to DockerHub
         - echo $DOCKERPASS | docker login -u $DOCKERUSER --password-stdin
