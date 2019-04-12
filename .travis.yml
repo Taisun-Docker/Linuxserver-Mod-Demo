@@ -1,0 +1,24 @@
+sudo: true
+
+language: bash
+
+services:
+  - docker
+
+env:
+  global:
+    - DOCKERHUB="taisun/nzbget-mod"
+
+jobs:
+  include:
+    - stage: BuildImage
+      if: (NOT (type IN (pull_request)))
+      script:
+        # Build Dev image
+        - docker build --no-cache ${DOCKERHUB}:${TRAVIS_COMMIT} .
+        - docker tag ${DOCKERHUB}:${TRAVIS_COMMIT} ${DOCKERHUB}:latest
+        # Login to DockerHub
+        - echo $DOCKERPASS | docker login -u $DOCKERUSER --password-stdin
+        # Push all of the tags
+        - docker push ${DOCKERHUB}:${TRAVIS_COMMIT}
+        - docker push ${DOCKERHUB}:latest
